@@ -7,44 +7,54 @@ let incorrect = 0;
 const store = {
   // 5 or more questions are required
   questions: [{
-      question: 'The sky is blue',
+      question: `How many moons does Jupiter have?`,
       answers: [
-        'true',
-        'false'
+        103,
+        96, 
+        79, 
+        73
       ],
-      correctAnswer: 'true'
+      correctAnswer: 79
     },
     {
-      question: 'Javascript is super easy',
+      question: `Which year was Google founded?`,
       answers: [
-        'true',
-        'false'
+        1996, 
+        1997, 
+        1998, 
+        2001
       ],
-      correctAnswer: 'false'
+      correctAnswer: 1998
     },
     {
-      question: 'Thinkful is cool',
+      question: `Kimchi is a popular side dish in which Asian country?`,
       answers: [
-        'true',
-        'false'
+        'Korea', 
+        'Japan', 
+        'China', 
+        'Vietnam'
       ],
-      correctAnswer: 'true'
+      correctAnswer: 'Korea'
     },
     {
-      question: 'jQuery is fun',
+      question: `Coca-Cola was founded in which city?`,
       answers: [
-        'true',
-        'false'
+        'New York City',
+        'Boston',
+        'Los Angeles',
+        'Atlanta'
       ],
-      correctAnswer: 'true'
+      correctAnswer: 'Atlanta'
     },
     {
-      question: 'Terra is the best',
+      question: `How many ounces in a cup?`,
       answers: [
-        'true',
-        'false'
+         6, 
+         8, 
+         12, 
+         16
       ],
-      correctAnswer: 'true'
+      correctAnswer: 8
     }
 
   ],
@@ -76,10 +86,8 @@ const store = {
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
 function renderQuestion() {
-  if (store.questionNumber > store.questions.length)
-    endQuiz();
-  if (store.quizStarted)
-    $('.question').html(store.questions[counter].question);
+  if(store.quizStarted)
+    $('#thisQuestion').html(store.questions[counter].question);
   //console.log(store.questions[0].question);
 }
 
@@ -92,13 +100,20 @@ function submitAnswer() {
     event.preventDefault();
     console.log(store.questionNumber);
     console.log(store.questions.length);
-    if (!document.getElementById('true').checked && !document.getElementById('false').checked)
-      return alert("Select an answer");
+    if (!document.getElementById('q1').checked && 
+        !document.getElementById('q2').checked &&
+        !document.getElementById('q3').checked &&
+        !document.getElementById('q4').checked)
+            return alert("Select an answer");
     let answer = 'default';
-    if (document.getElementById('true').checked)
-      answer = document.getElementById('true').value;
-    else if (document.getElementById('false').checked)
-      answer = document.getElementById('false').value;
+    if (document.getElementById('q1').checked)
+      answer = document.getElementById('q1').value;
+    else if (document.getElementById('q2').checked)
+      answer = document.getElementById('q2').value;
+    else if (document.getElementById('q3').checked)
+      answer = document.getElementById('q3').value;
+    else if (document.getElementById('q4').checked)
+      answer = document.getElementById('q4').value;
     else
       answer = 'still default';
     console.log(answer);
@@ -112,12 +127,14 @@ function submitAnswer() {
 
     counter++;
     store.questionNumber++;
-    $('.question-number').html(`Question: ${store.questionNumber}/5`);
-    $('.correct-counter').html(`Correct: ${correct}`);
-    $('.wrong-counter').html(`Incorrect: ${incorrect}`);
-    renderQuestion();
+    if (store.questionNumber > store.questions.length)
+      endQuiz();
+    else
+      renderHeaderTag();
   })
 }
+
+
 
 function renderHeader() {
   $('header').html(`
@@ -134,14 +151,14 @@ function renderHeader() {
 }
 
 function endQuiz() {
-  $('header').html(`<h1 class="quiz-name-full">FULL name</h1>`);
+  $('header').html(`<h1 class="quiz-name-full">CONGRATULATIONS!</h1>`);
   $('main').html(`
   <div id="results">
     <div>
       <p class="results-tag">RESULTS:</p>
     </div>
     <div class="results-counters">
-      <p class="results-correct">Score: ${(correct + incorrect)}/5</p>
+      <p class="results-correct">Score: ${(correct)}/5</p>
     </div>
     <form id="restart-button-div">
       <button type="submit" id="restart-button" class="generic-button">RESTART?</button>
@@ -156,22 +173,44 @@ function renderStartButton() {
   </div>`)
 }
 
+function renderHeaderTag(){
+    
+    $('.question-number').html(`Question: ${store.questionNumber}/5`);
+    $('.correct-counter').html(`Correct: ${correct}`);
+    $('.wrong-counter').html(`Incorrect: ${incorrect}`);
+    renderQuestion();
+    renderAnswers();
+}
+
 function renderMain() {
   $('main').html(`
   <div class="box">
-    <div class="question"></div>
+    <div class="question" id="thisQuestion"></div>
     <form class="form">
-      <div>
-        <input type="radio" id="true" name="answer" value="true" required="required" >
-        <label for="true">True</label>
-      </div>
-      <div>
-        <input type="radio" id="false" name="answer" value="false" >
-        <label for="false">False</label>
-      </div>
-      <button type="submit" id="submit">Submit</button>
     </form>
   </div>`)
+}
+
+function renderAnswers(){
+  $('.form').html(`
+  <div>
+        <input type="radio" id="q1" name="answer" value=${store.questions[counter].answers[0]} required="required" >
+        <label for="q1">${store.questions[counter].answers[0]}</label>
+      </div>
+      <div>
+        <input type="radio" id="q2" name="answer" value=${store.questions[counter].answers[1]} >
+        <label for="q2">${store.questions[counter].answers[1]}</label>
+      </div>
+      <div>
+        <input type="radio" id="q3" name="answer" value=${store.questions[counter].answers[2]} >
+        <label for="q3">${store.questions[counter].answers[2]}</label>
+      </div>
+      <div>
+        <input type="radio" id="q4" name="answer" value=${store.questions[counter].answers[3]} >
+        <label for="q4">${store.questions[counter].answers[3]}</label>
+      </div>
+      <button type="submit" id="submit">Submit</button>
+      `);
 }
 
 function restartQuiz() {
@@ -190,12 +229,14 @@ function startQuiz() {
     renderMain();
     renderHeader();
     renderQuestion();
+    renderAnswers();
   });
 }
 
 function handleQuestions() {
   renderStartButton();
   startQuiz();
+  renderHeaderTag();
   renderQuestion();
   submitAnswer();
   restartQuiz();
