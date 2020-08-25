@@ -119,21 +119,15 @@ function submitAnswer() {
     console.log(answer);
     if (store.questions[counter].correctAnswer == answer) {
       correct++;
-      alert("You are right!");
+      submitRightAnswer();
     } else {
       incorrect++;
-      alert("You are wrong!");
+      submitWrongAnswer();
     }
 
-    counter++;
-    store.questionNumber++;
-    if (store.questionNumber > store.questions.length)
-      endQuiz();
-    else
-      renderHeaderTag();
+    
   })
 }
-
 
 
 function renderHeader() {
@@ -191,9 +185,44 @@ function renderMain() {
   </div>`)
 }
 
+function submitRightAnswer(){
+  $('main').html(`
+      <h2>You are correct!</h2>
+      <form id="next-button">
+        <button type="submit" class="submit" id="next" class="generic-button">Next</button>
+      </form>
+  `)
+}
+
+function submitWrongAnswer(){
+  $('main').html(`
+    <h2>Incorrect. The correct answer is: ${store.questions[counter].correctAnswer}</h2>
+      <form id="next-button">
+        <button type="submit" class="submit" id="next" class="generic-button">Next</button>
+      </form>
+  `)
+}
+
+
+function HandleNextClick(){
+  $('main').on('click', '#next', function(event){
+    event.preventDefault();
+    counter++;
+    store.questionNumber++;
+    if (store.questionNumber > store.questions.length)
+      endQuiz();
+    else{
+      renderMain();
+      renderHeader();
+      renderQuestion();
+      renderAnswers();
+    }
+  })
+}
+
 function renderAnswers(){
   $('.form').html(`
-  <div>
+      <div>
         <input type="radio" id="q1" name="answer" value=${store.questions[counter].answers[0]} required="required" >
         <label for="q1">${store.questions[counter].answers[0]}</label>
       </div>
@@ -209,7 +238,7 @@ function renderAnswers(){
         <input type="radio" id="q4" name="answer" value=${store.questions[counter].answers[3]} >
         <label for="q4">${store.questions[counter].answers[3]}</label>
       </div>
-      <button type="submit" id="submit">Submit</button>
+      <button type="submit" class="submit" id="submit">Submit</button>
       `);
 }
 
@@ -240,6 +269,7 @@ function handleQuestions() {
   renderQuestion();
   submitAnswer();
   restartQuiz();
+  HandleNextClick();
 }
 
 $(handleQuestions);
