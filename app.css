@@ -114,7 +114,7 @@ main, .box, .form {
   align-items: center;
 }
 
-#submit {
+.submit {
   margin-top: 15px;
   font-weight: bold;
   background-color: rgb(168, 209, 235);
