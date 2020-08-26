@@ -1,6 +1,8 @@
 /**
  * Example store structure
  */
+
+'use strict';
 let counter = 0;
 let correct = 0;
 let incorrect = 0;
@@ -81,6 +83,28 @@ const store = {
 
 // These functions return HTML templates
 
+function generateStartButton(){
+  return (`
+  <div id="start-button-div">
+    <button type="submit" id="start-button" class="generic-button">START QUIZ</button>
+  </div>`);
+}
+
+function generateRenderHeader(){
+  return `
+  <div id="quiz-name-div">
+    <h1 class="quiz-name-short">SUPER HARD QUIZ</h1>
+  </div>
+  <div id="quiz-tracker">
+      <h2 class="question-number">Question: ${store.questionNumber}/5</h2>
+  <div class="header-counters">
+    <h3 class="correct-counter">Correct: ${correct}</h3>
+    <h3 class="wrong-counter">Incorrect: ${incorrect}</h3>
+  </div>
+</div>`;
+}
+
+
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
@@ -131,21 +155,11 @@ function submitAnswer() {
 
 
 function renderHeader() {
-  $('header').html(`
-    <div id="quiz-name-div">
-      <h1 class="quiz-name-short">SUPER HARD QUIZ</h1>
-    </div>
-    <div id="quiz-tracker">
-        <h2 class="question-number">Question: ${store.questionNumber}/5</h2>
-    <div class="header-counters">
-      <h3 class="correct-counter">Correct: ${correct}</h3>
-      <h3 class="wrong-counter">Incorrect: ${incorrect}</h3>
-    </div>
-  </div>`);
+  $('header').html(generateRenderHeader());
 }
 
 function endQuiz() {
-  $('header').html(`<h1 class="quiz-name-full">CONGRATULATIONS!</h1>`);
+  $('header').html('<h1 class="quiz-name-full">CONGRATULATIONS!</h1>');
   $('main').html(`
   <div id="results">
     <div>
@@ -161,11 +175,9 @@ function endQuiz() {
 }
 
 function renderStartButton() {
-  $('main').html(`
-  <div id="start-button-div">
-    <button type="submit" id="start-button" class="generic-button">START QUIZ</button>
-  </div>`)
+  $('main').html(generateStartButton());
 }
+
 
 function renderHeaderTag(){
     
